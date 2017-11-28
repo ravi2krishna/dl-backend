@@ -5,8 +5,8 @@
       "type": "mysql",
       "host": "localhost",
       "port": 3306,
-      "username": "digitallync",
-      "password": "DigitalLync123*",
+      "username": "root",
+      "password": "Lync123*",
       "database": "dledu_dev",
       "usePool": true
     },
