@@ -1,0 +1,85 @@
+create table type_batch(
+	id varchar(30) primary key,
+	code varchar(30) not null,
+	name varchar(30) not null,
+	active boolean default true not null,
+	updated_by varchar(30) default 'system',
+	updated_date timestamp default now()
+);
+ALTER TABLE type_batch ADD CONSTRAINT type_batch_uq_code_name UNIQUE (code, name);
+
+create table batch(
+	id varchar(30) primary key,
+	name varchar(50) not null,
+	type varchar(50) not null,
+	course varchar(50) not null,
+	from_date date ,
+	to_date date,
+	from_time varchar(50),
+	to_time varchar(50),
+	des varchar(50),
+	branch varchar(50) not null,
+	updated_by varchar(30) default 'system',
+	updated_date timestamp default now()
+);
+
+ALTER TABLE batch ADD CONSTRAINT batch_fk_course FOREIGN KEY (course) REFERENCES course(id);
+ALTER TABLE batch ADD CONSTRAINT batch_fk_type FOREIGN KEY (type) REFERENCES type_batch(id);
+ALTER TABLE batch ADD CONSTRAINT batch_fk_branch FOREIGN KEY (branch) REFERENCES branch(id);
+
+create table status_batch(
+	id varchar(30) primary key,
+	code varchar(30) not null,
+	name varchar(30) not null,
+	active boolean default true not null,
+	updated_by varchar(30) default 'system',
+	updated_date timestamp default now()
+);
+ALTER TABLE status_batch ADD CONSTRAINT status_batch_uq_code_name UNIQUE (code, name);
+
+
+create table batch_topic(
+	id varchar(30) primary key,
+	batch varchar(50) not null,
+	status varchar(50) not null,
+	topic varchar(50) not null
+);
+
+ALTER TABLE batch_topic ADD CONSTRAINT batch_topic_fk_status FOREIGN KEY (status) REFERENCES status_batch(id);
+ALTER TABLE batch_topic ADD CONSTRAINT batch_topic_fk_batch FOREIGN KEY (batch) REFERENCES batch(id);
+alter table batch_topic ADD CONSTRAINT batch_topic_fk_topic FOREIGN KEY (topic) REFERENCES topic(id);
+
+create table batch_timing(
+	id varchar(30) primary key,
+	batch_topic varchar(50) not null,
+	from_time datetime not null,
+	to_time datetime,
+	mins int not null default 0,
+	user varchar(50) not null,
+	updated_by varchar(30) default 'system',
+	updated_date timestamp default now()
+);
+
+ALTER TABLE batch_timing ADD CONSTRAINT batch_timing_fk_batch_topic FOREIGN KEY (batch_topic) REFERENCES batch_topic(id);
+ALTER TABLE batch_timing ADD CONSTRAINT batch_timing_fk_user FOREIGN KEY (user) REFERENCES user(id);
+
+create table batch_user(
+	id varchar(30) primary key,
+	user varchar(50) not null,
+	batch varchar(50) not null
+);
+
+ALTER TABLE batch_user ADD CONSTRAINT batch_user_fk_user FOREIGN KEY (user) REFERENCES user(id);
+ALTER TABLE batch_user ADD CONSTRAINT batch_user_fk_batch FOREIGN KEY (batch) REFERENCES batch(id);
+
+create table attendance(
+	id varchar(30) primary key,
+	from_time datetime not null,
+	to_time datetime,
+	mins int not null default 0,
+	user varchar(50) not null,
+	updated_by varchar(30) default 'system',
+	updated_date timestamp default now()
+);
+
+ALTER TABLE attendance ADD CONSTRAINT attendance_fk_user FOREIGN KEY (user) REFERENCES user(id);
